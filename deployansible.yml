@@ -1,0 +1,13 @@
+--
+- name: ansible script for deploy application into remote server
+  hosts: dest_server
+  tasks:
+    - name: copy application to the remote server
+      copy:
+        src: /tmp/spring/target/spring-petclinic-2.7.3.jar
+        dest: /home/ubuntu/spring-petclinic/target
+
+    - name: copy application to the remote server
+      copy:
+        src: /tmp/spring/deployJava.sh
+        dest: /home/ubuntu/spring-petclinic/
