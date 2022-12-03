@@ -5,7 +5,7 @@
     - name: copy application to the remote server
       copy:
         src: /var/lib/jenkins/workspace/pipeline_cloneanddeployjar/target/spring-petclinic-2.7.3.jar
-        dest: /home/ubuntu/spring-petclinic/target
+        dest: /root/
 
     - name: start the application in the remote server
-      shell: nohup java -jar /home/ubuntu/spring-petclinic-2.7.3.jar & 1>&2 > /dev/null
+      shell: nohup java -jar /root/spring-petclinic-2.7.3.jar & 1>&2 > /dev/null
