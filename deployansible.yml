@@ -4,7 +4,7 @@
   tasks:
     - name: copy application to the remote server
       copy:
-        src: /tmp/spring/target/spring-petclinic-2.7.3.jar
+        src: /var/lib/jenkins/workspace/pipeline_cloneanddeployjar/target/spring-petclinic-2.7.3.jar
         dest: /home/ubuntu/spring-petclinic/target
 
     - name: start the application in the remote server
