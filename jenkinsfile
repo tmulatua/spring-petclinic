@@ -1,0 +1,13 @@
+node{
+    stage('SCM Checkout'){
+            git branch: 'main',
+            url: 'https://github.com/tmulatua/spring-petclinic.git'
+            }
+    stage('Build the PetClinic with Maven and archive JAR'){
+            sh './mvnw package'
+            archiveArtifacts 'target/*.jar'
+            }
+    stage('Deploy Ansible Playbook'){
+            ansiblePlaybook become: true, becomeUser: null, credentialsId: 'root', disableHostKeyChecking: true, installation: 'deploy_springboot', inventory: 'server.inv', playbook: 'deployansible.yml', sudoUser: null  
+            }
+}
