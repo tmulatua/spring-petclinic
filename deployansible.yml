@@ -1,5 +1,5 @@
 --
-- name: ansible script for deploy application into remote server
+- name: ansible script for deploying application into remote server
   hosts: dest_server
   tasks:
     - name: copy application to the remote server
@@ -7,7 +7,5 @@
         src: /tmp/spring/target/spring-petclinic-2.7.3.jar
         dest: /home/ubuntu/spring-petclinic/target
 
-    - name: copy application to the remote server
-      copy:
-        src: /tmp/spring/deployJava.sh
-        dest: /home/ubuntu/spring-petclinic/
+    - name: start the application in the remote server
+      shell: nohup java -jar /home/ubuntu/spring-petclinic-2.7.3.jar & 1>&2 > /dev/null
