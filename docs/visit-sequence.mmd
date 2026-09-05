@@ -1,0 +1,27 @@
+sequenceDiagram
+    actor U as User (Browser)
+    participant C as VisitController
+    participant F as PetTypeFormatter / Validator
+    participant R as OwnerRepository
+    participant D as Database
+    participant T as Thymeleaf View
+
+    U->>C: GET /owners/{ownerId}/pets/{petId}/visits/new
+    C->>R: findById(ownerId)
+    R->>D: SELECT owner, pets, visits
+    D-->>R: Owner (with Pet)
+    R-->>C: Owner
+    C->>T: render visits/createOrUpdateVisitForm
+    T-->>U: HTML form
+
+    U->>C: POST /owners/{ownerId}/pets/{petId}/visits/new (date, description)
+    C->>F: validate Visit (Bean Validation)
+    alt validation fails
+        C->>T: re-render form with errors
+        T-->>U: HTML form + error messages
+    else valid
+        C->>R: save(owner)  ← visit cascaded via pet
+        R->>D: INSERT INTO visits (...)
+        D-->>R: OK
+        C-->>U: redirect:/owners/{ownerId}
+    end

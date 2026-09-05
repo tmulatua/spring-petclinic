@@ -1,0 +1,39 @@
+graph TD
+    Browser([Browser]) -->|HTTP| WC[Web Layer<br/>Spring MVC Controllers]
+
+    subgraph App["PetClinicApplication (Spring Boot, single JAR)"]
+        subgraph Controllers["Web Layer (@Controller)"]
+            OC[OwnerController<br/>/owners/*]
+            PC[PetController<br/>/owners/{id}/pets/*]
+            VC2[VisitController<br/>/owners/{id}/pets/{id}/visits/new]
+            VC[VetController<br/>/vets, /vets.html]
+            WC2[WelcomeController / CrashController<br/>/ , /oups]
+        end
+
+        subgraph Domain["Domain Layer (by business capability)"]
+            OwnerPkg[owner package<br/>Owner, Pet, Visit, PetType<br/>PetValidator, PetTypeFormatter]
+            VetPkg[vet package<br/>Vet, Specialty, Vets]
+        end
+
+        subgraph Persistence["Persistence Layer (Spring Data JPA)"]
+            OR[OwnerRepository]
+            VR[VetRepository]
+        end
+
+        Cache[(JCache<br/>vet list cache)]
+        View[Thymeleaf templates<br/>+ WebJars Bootstrap]
+    end
+
+    OC --> OwnerPkg
+    PC --> OwnerPkg
+    VC2 --> OwnerPkg
+    VC --> VetPkg
+    OwnerPkg --> OR
+    VetPkg --> VR
+    VR -.->|@Cacheable 'vets'| Cache
+    Controllers --> View -->|HTML| Browser
+    VC -->|JSON/XML accept header| Browser
+    OR -->|JPA / Hibernate| DB[(Relational DB<br/>H2 default · MySQL · PostgreSQL · HSQLDB)]
+    VR -->|JPA / Hibernate| DB
+
+    Actuator[Spring Actuator<br/>/actuator/*] -.-> App
